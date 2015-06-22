@@ -3,9 +3,6 @@
 class FacetWP_Integration_CMB2
 {
 
-    public $fields;
-
-
     function __construct() {
 
         // Add CMB2 fields to the Data Sources dropdown
