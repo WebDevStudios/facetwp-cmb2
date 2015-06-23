@@ -84,7 +84,7 @@ class FacetWP_Integration_CMB2 {
 				foreach ( $fields as $field ) {
 					$return[] = array(
 						'id'    => $field['id'],
-						'label' => $field['desc'],
+						'label' => $field['desc'] ?: $field['id'],
 					);
 				}
 			}
