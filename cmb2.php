@@ -60,6 +60,8 @@ class FacetWP_Integration_CMB2 {
 
 		if ( 'cmb2/' == substr( $facet['source'], 0, 4 ) ) {
 			// TODO index the value
+			$index = array();
+			error_log( "Facet info: " . print_r( $facet, true ) );
 
 			// return TRUE to prevent the default indexer from running
 			return true;
