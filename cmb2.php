@@ -67,6 +67,31 @@ class FacetWP_Integration_CMB2 {
 
 		return $return;
 	}
+
+	/**
+	 * Get registered CMB2 fields.
+	 *
+	 * @return array
+	 */
+	protected function get_cmb_fields() {
+		$return = array();
+
+		if ( class_exists( 'CMB2_Boxes', false ) ) {
+			$boxes = CMB2_Boxes::get_all();
+			foreach ( $boxes as $cmb ) {
+				$fields = $cmb->prop( 'fields', array() );
+
+				foreach ( $fields as $field ) {
+					$return[] = array(
+						'id'    => $field['id'],
+						'label' => $field['desc'],
+					);
+				}
+			}
+		}
+
+		return $return;
+	}
 }
 
 
