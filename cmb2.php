@@ -46,11 +46,11 @@ class FacetWP_Integration_CMB2 {
 
 		// Get every CMB2 registered field as an array
 		$fields = $this->get_cmb_fields();
-
 		foreach ( $fields as $field ) {
-			$field_id                                     = $field['id'];
-			$field_label                                  = $field['label'];
-			$sources['cmb2']['choices']["cmb2/$field_id"] = $field_label;
+			// The Field ID string is used later to determine the metabox and field ID
+			$field_id_string = "cmb2/{$field['metabox_id']}/{$field['id']}";
+
+			$sources['cmb2']['choices'][ $field_id_string ] = $field['label'];
 		}
 
 		return $sources;
@@ -79,22 +79,21 @@ class FacetWP_Integration_CMB2 {
 	/**
 	 * Get registered CMB2 fields.
 	 *
-	 * @return array
+	 * @return array Multidimensional array of field data. Each array item contains 'id', 'label',
+	 *               and 'metabox_id' keys.
 	 */
 	protected function get_cmb_fields() {
 		$return = array();
+		$boxes  = CMB2_Boxes::get_all();
+		foreach ( $boxes as $cmb ) {
+			$fields = $cmb->prop( 'fields', array() );
 
-		if ( class_exists( 'CMB2_Boxes', false ) ) {
-			$boxes = CMB2_Boxes::get_all();
-			foreach ( $boxes as $cmb ) {
-				$fields = $cmb->prop( 'fields', array() );
-
-				foreach ( $fields as $field ) {
-					$return[] = array(
-						'id'    => $field['id'],
-						'label' => $field['desc'] ?: $field['id'],
-					);
-				}
+			foreach ( $fields as $field ) {
+				$return[] = array(
+					'id'         => $field['id'],
+					'label'      => isset( $field['name'] ) ? $field['name'] : $field['id'],
+					'metabox_id' => $cmb->cmb_id,
+				);
 			}
 		}
 
