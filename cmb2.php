@@ -37,6 +37,9 @@ class FacetWP_Integration_CMB2 {
 
 	/**
 	 * Add CMB2 fields to the Data Sources dropdown
+	 *
+	 * @param array $sources The current set of data sources.
+	 * @return array The updated set of data sources.
 	 */
 	public function facet_sources( $sources ) {
 		$sources['cmb2'] = array(
@@ -58,6 +61,11 @@ class FacetWP_Integration_CMB2 {
 
 	/**
 	 * Index CMB2 field data
+	 *
+	 * @param bool $return
+	 * @param array $params
+	 *
+	 * @return bool
 	 */
 	public function indexer_post_facet( $return, $params ) {
 		$defaults = $params['defaults'];
