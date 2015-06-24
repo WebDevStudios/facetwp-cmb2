@@ -58,7 +58,7 @@ class FacetWP_Integration_CMB2 {
 		$defaults = $params['defaults'];
 		$facet    = $params['facet'];
 
-		error_log( "Facet info: " . print_r( $facet, true ) . PHP_EOL, 3, WP_CONTENT_DIR . '/facet.log' );
+		error_log( "Param info: " . print_r( $params, true ) . PHP_EOL, 3, WP_CONTENT_DIR . '/facet.log' );
 
 		if ( 'cmb2/' == substr( $facet['source'], 0, 4 ) ) {
 			// TODO index the value
