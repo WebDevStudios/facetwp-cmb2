@@ -76,9 +76,42 @@ class FacetWP_Integration_CMB2 {
 			error_log( "Param info: " . print_r( $params, true ) . PHP_EOL, 3, WP_CONTENT_DIR . '/facet.log' );
 		}
 
-		if ( 'cmb2/' == substr( $facet['source'], 0, 4 ) ) {
-			// TODO index the value
-			$index = array();
+		// Split up the facet source
+		$source = explode( '/', $facet['source'] );
+
+		if ( 'cmb2' === $source[0] ) {
+
+			// Initial var setup
+			$metabox_id = $source[1];
+			$field_id   = $source[2];
+			$post       = WP_Post::get_instance( $params['defaults']['post_id'] );
+			$cmb        = CMB2_Boxes::get( $metabox_id );
+			$field      = $cmb->get_field( $field_id );
+			$values     = (array) get_metadata( $post->post_type, $post->ID, $field_id );
+
+			// Index each item individually
+			foreach ( $values as $value ) {
+
+				// No need to index these types
+				$skip_index = apply_filters( 'facetwp_cmb2_skip_index', array( 'title', 'group' ) );
+				if ( in_array( $field->type, $skip_index ) ) {
+					continue;
+				}
+
+				// By default, skip indexing text fields, because data is likely to be unique
+				$skip_index_text = apply_filters( 'facetwp_cmb2_skip_index_text', true );
+				if ( false !== strpos( $field->type, 'text' ) && ! $skip_index_text ) {
+					FWP()->indexer->index_row( array_merge(
+						$defaults,
+						array(
+							'facet_value'         => $value,
+							'facet_display_value' => $field->args( 'desc' ) ?: $field_id,
+						)
+					) );
+				} elseif ( false /* placeholder */ ) {
+
+				}
+			}
 
 			// return TRUE to prevent the default indexer from running
 			return true;
