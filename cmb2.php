@@ -53,6 +53,9 @@ class FacetWP_Integration_CMB2 {
 
 		// CMB2 field handler
 		add_filter( 'facetwp_indexer_post_facet', array( $this, 'indexer_post_facet' ), 10, 2 );
+
+		// Text fields that should be indexed
+		add_filter( 'facetwp_cmb2_skip_index_text', array( $this, 'text_field_exceptions' ), 10, 2 );
 	}
 
 
@@ -251,6 +254,34 @@ class FacetWP_Integration_CMB2 {
 		foreach ( $values as $value ) {
 			$this->index_row( $value, $defaults );
 		}
+	}
+
+	/**
+	 * Filter the text fields that should be skipped.
+	 *
+	 * This also serves as an example for how to use the 'facetwp_cmb2_skip_index_text' filter.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool   $index      Whether to skip indexing this field.
+	 * @param string $field_type The type of field.
+	 *
+	 * @return bool
+	 */
+	public function text_field_exceptions( $index, $field_type ) {
+		$exception = array(
+			'text_date',
+			'text_time',
+			'text_date_timestamp',
+			'text_datetime_timestamp',
+			'text_datetime_timestamp_timezone',
+		);
+
+		if ( in_array( $field_type, $exception ) ) {
+			return false;
+		}
+
+		return $index;
 	}
 
 	/**
