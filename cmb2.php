@@ -343,6 +343,19 @@ class FacetWP_Integration_CMB2 {
 			$fields = $cmb->prop( 'fields', array() );
 
 			foreach ( $fields as $field ) {
+
+				/**
+				 * Filter to skip indexing hidden fields.
+				 *
+				 * @since 1.0.0
+				 *
+				 * @param bool $skip_hidden_fields Whether to skip indexing hidden fields.
+				 */
+				$skip_hidden_fields = apply_filters( 'facetwp_cmb2_skip_hidden_fields', true );
+				if ( $skip_hidden_fields && 'hidden' == $field['type'] ) {
+					continue;
+				}
+
 				$return[] = array(
 					'id'         => $field['id'],
 					'label'      => isset( $field['name'] ) ? $field['name'] : $field['id'],
