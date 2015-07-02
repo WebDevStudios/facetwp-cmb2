@@ -239,6 +239,21 @@ class FacetWP_Integration_CMB2 {
 	}
 
 	/**
+	 * Helper function to index an array of values.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $values   Multidimensional array of values to index.
+	 * @param array $defaults Default values to use when indexing.
+	 */
+	public function index_multiple( $values, $defaults ) {
+		// Loop through each value and index it
+		foreach ( $values as $value ) {
+			$this->index_row( $value, $defaults );
+		}
+	}
+
+	/**
 	 * Get registered CMB2 fields.
 	 *
 	 * @return array Multidimensional array of field data. Each array item contains 'id', 'label',
