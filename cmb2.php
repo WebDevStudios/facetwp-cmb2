@@ -63,7 +63,9 @@ class FacetWP_Integration_CMB2 {
 
 
 	/**
-	 * Add CMB2 fields to the Data Sources dropdown
+	 * Add CMB2 fields to the Data Sources dropdown.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param array $sources The current set of data sources.
 	 * @return array The updated set of data sources.
