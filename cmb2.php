@@ -92,8 +92,14 @@ class FacetWP_Integration_CMB2 {
 		$defaults = $params['defaults'];
 		$facet    = $params['facet'];
 
-		// Debugging!
-		if ( WP_DEBUG ) {
+		/**
+		 * Filter to enable debugging.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool $debugging Whether to enable debugging. Defaults to false./
+		 */
+		if ( apply_filters( 'facetwp_cmb2_debugging', false ) ) {
 			error_log( "Param info: " . print_r( $params, true ) . PHP_EOL, 3, WP_CONTENT_DIR . '/facet.log' );
 		}
 
