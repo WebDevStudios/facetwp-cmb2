@@ -13,16 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( "You can't do anything by accessing this file directly." );
 }
 
-// Check to see if CMB2 is loaded.
-if ( ! defined( 'CMB2_LOADED' ) ) {
-	return;
-}
-
-// Check to see if FacetWP is loaded.
-if ( ! function_exists( 'FWP' ) ) {
-	return;
-}
-
 class FacetWP_Integration_CMB2 {
 
 	/**
