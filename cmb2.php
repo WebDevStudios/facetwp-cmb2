@@ -340,6 +340,11 @@ class FacetWP_Integration_CMB2 {
 		$return = array();
 		$boxes  = CMB2_Boxes::get_all();
 		foreach ( $boxes as $cmb ) {
+			// Secret override method to skip indexing a metabox's fields
+			if ( $cmb->prop( 'no_facetwp_index', false ) ) {
+				continue;
+			}
+
 			$fields = $cmb->prop( 'fields', array() );
 
 			foreach ( $fields as $field ) {
