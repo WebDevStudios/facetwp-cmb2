@@ -3,7 +3,7 @@
  * Plugin Name: CMB2 Integration for FacetWP
  * Plugin URI: https://github.com/WebDevStudios/facetwp-cmb2
  * Description: Allow FacetWP to properly utilize data created and stored by CMB2.
- * Version: 1.0
+ * Version: 1.0.0
  * Author: Matt Gibbs, Jeremy Pry (WebDevStudios)
  * License: GPL2
  */
