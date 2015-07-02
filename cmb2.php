@@ -56,6 +56,9 @@ class FacetWP_Integration_CMB2 {
 
 		// Text fields that should be indexed
 		add_filter( 'facetwp_cmb2_skip_index_text', array( $this, 'text_field_exceptions' ), 10, 2 );
+
+		// Special handling for time/date fields
+		add_filter( 'facetwp_cmb2_default_index', array( $this, 'time_date_indexing' ), 10, 3 );
 	}
 
 
@@ -282,6 +285,57 @@ class FacetWP_Integration_CMB2 {
 		}
 
 		return $index;
+	}
+
+	/**
+	 * Handle indexing the various date/time fields.
+	 *
+	 * This method also serves as an example of the 'facetwp_cmb2_default_index' filter, although it should be noted
+	 * that since it is part of the class, it does not use the $obj class object, but makes method calls directly.
+	 * For use outside of this class, be sure to use $obj->index_row() or $obj->index_multiple().
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool       $filter   Continue with normal indexing.
+	 * @param CMB2_Field $field    The field object.
+	 * @param array      $defaults Array of default data.
+	 *
+	 * @return bool Whether to continue with the normal indexing.
+	 */
+	public function time_date_indexing( $filter, $field, $defaults ) {
+		$date_format = 'Y-m-d';
+		$extended_format = "{$date_format} H:i:s";
+		$index = array(
+			'facet_display_value' => $field->args( 'name' ),
+		);
+
+		// Check for special field types
+		if ( 'text_data' == $field->type() ) {
+			$index['facet_value'] = date( $date_format, strtotime( $field->value() ) );
+			$this->index_row( $index, $defaults );
+
+			return false;
+		} elseif ( 'text_date_timestamp' == $field->type() ) {
+			$index['facet_value'] = date( $date_format, $field->value() );
+			$this->index_row( $index, $defaults );
+
+			return false;
+		} elseif ( 'text_datetime_timestamp' == $field->type() ) {
+			$index['facet_value'] = date( $extended_format, $field->value() );
+			$this->index_row( $index, $defaults );
+
+			return false;
+		} elseif ( 'text_datetime_timestamp_timezone' == $field->type() ) {
+			$value = maybe_unserialize( $field->value() );
+			if ( $value instanceof DateTime ) {
+				$index['facet_value'] = $value->format( $extended_format );
+				$this->index_row( $index, $defaults );
+
+				return false;
+			}
+		}
+
+		return $filter;
 	}
 
 	/**
