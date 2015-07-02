@@ -345,6 +345,21 @@ class FacetWP_Integration_CMB2 {
 				continue;
 			}
 
+			/**
+			 * Filter to skip metaboxes with no default hookup.
+			 *
+			 * Typically "hookup" => false is used by metaboxes that are on option pages, or are dispalyed on the front
+			 * end.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param bool $skip_false_hookup Whether to skip metaboxes with hookup => false.
+			 */
+			$skip_false_hookup = apply_filters( 'facetwp_cmb2_skip_false_hookup', true );
+			if ( $skip_false_hookup && false === $cmb->prop( 'hookup' ) ) {
+				continue;
+			}
+
 			$fields = $cmb->prop( 'fields', array() );
 
 			foreach ( $fields as $field ) {
