@@ -25,8 +25,29 @@ if ( ! function_exists( 'FWP' ) ) {
 
 class FacetWP_Integration_CMB2 {
 
-	public function __construct() {
+	/**
+	 * @var FacetWP_Integration_CMB2
+	 */
+	protected static $instance = null;
 
+	protected function __construct() {}
+
+	/**
+	 * @return FacetWP_Integration_CMB2
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * Hook class methods to FacetWP hooks.
+	 *
+	 * @since 1.0.0
+	 */
+	public function setup_hooks() {
 		// Add CMB2 fields to the Data Sources dropdown
 		add_filter( 'facetwp_facet_sources', array( $this, 'facet_sources' ) );
 
@@ -145,5 +166,4 @@ class FacetWP_Integration_CMB2 {
 	}
 }
 
-
-new FacetWP_Integration_CMB2();
+FacetWP_Integration_CMB2::instance()->setup_hooks();
