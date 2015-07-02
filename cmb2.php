@@ -225,6 +225,20 @@ class FacetWP_Integration_CMB2 {
 	}
 
 	/**
+	 * Index a single value.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $value    The array of values to index. Available keys in the array are: post_id, facet_name,
+	 *                        facet_source, facet_value, facet_display_value, term_id, parent_id, and depth. For more
+	 *                        information, see @link https://facetwp.com/documentation/facetwp_index_row/
+	 * @param array $defaults Default values to use when indexing.
+	 */
+	public function index_row( $value, $defaults ) {
+		FWP()->indexer->index_row( wp_parse_args( $value, $defaults ) );
+	}
+
+	/**
 	 * Get registered CMB2 fields.
 	 *
 	 * @return array Multidimensional array of field data. Each array item contains 'id', 'label',
