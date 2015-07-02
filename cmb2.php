@@ -106,45 +106,85 @@ class FacetWP_Integration_CMB2 {
 		// Split up the facet source
 		$source = explode( '/', $facet['source'] );
 
-		if ( 'cmb2' === $source[0] ) {
+		// Maybe return early
+		if ( 'cmb2' !== $source[0] ) {
+			return $return;
+		}
 
-			// Initial var setup
-			$metabox_id = $source[1];
-			$field_id   = $source[2];
-			$post       = WP_Post::get_instance( $params['defaults']['post_id'] );
-			$cmb        = CMB2_Boxes::get( $metabox_id );
-			$field      = $cmb->get_field( $field_id );
-			$values     = (array) get_metadata( $post->post_type, $post->ID, $field_id );
+		// Initial var setup
+		$metabox_id = $source[1];
+		$field_id   = $source[2];
+		$cmb        = CMB2_Boxes::get( $metabox_id );
+		$field      = $cmb->get_field( $field_id );
+		$field_type = $field->type();
 
-			// Index each item individually
-			foreach ( $values as $value ) {
-
-				// No need to index these types
-				$skip_index = apply_filters( 'facetwp_cmb2_skip_index', array( 'title', 'group' ) );
-				if ( in_array( $field->type, $skip_index ) ) {
-					continue;
-				}
-
-				// By default, skip indexing text fields, because data is likely to be unique
-				$skip_index_text = apply_filters( 'facetwp_cmb2_skip_index_text', true );
-				if ( false !== strpos( $field->type, 'text' ) && ! $skip_index_text ) {
-					FWP()->indexer->index_row( array_merge(
-						$defaults,
-						array(
-							'facet_value'         => $value,
-							'facet_display_value' => $field->args( 'desc' ) ?: $field_id,
-						)
-					) );
-				} elseif ( false /* placeholder */ ) {
-
-				}
-			}
-
-			// return TRUE to prevent the default indexer from running
+		/**
+		 * Filter the CMB2 field types that do not need to be indexed by FacetWP.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $fields Array of field types that do not need to be indexed.
+		 */
+		$skip_index = apply_filters( 'facetwp_cmb2_skip_index', array( 'title', 'group' ) );
+		if ( in_array( $field->type(), $skip_index ) ) {
 			return true;
 		}
 
-		return $return;
+		/**
+		 * Filter to skip indexing text fields.
+		 *
+		 * By default, skip indexing text fields, because data is likely to be unique. This filter provides access
+		 * to the field type, so that more granular control can be achieved.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool   $skip       Whether to skip indexing text fields. Default: true.
+		 * @param string $field_type The field type.
+		 */
+		$skip_index_text = apply_filters( 'facetwp_cmb2_skip_index_text', true, $field_type );
+		if ( false !== strpos( $field->type(), 'text' ) && $skip_index_text ) {
+			return false;
+		}
+
+		/**
+		 * Filter to skip indexing WYSIWYG fields.
+		 *
+		 * Similar to text fields, skip indexing by default because data is likely to be unique.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool $skip Whether to skip indexing WYSIWYG fields.
+		 */
+		$skip_index_wysiwyg = apply_filters( 'facetwp_cmb2_skip_index_wysiwyg', true );
+		if ( $skip_index_wysiwyg ) {
+			return false;
+		}
+
+		// Checkboxes are either on or off. Only index the "on" value.
+		if ( 'checkbox' == $field_type ) {
+			if ( 'on' == $field->value() ) {
+				$this->index_field( $field, $defaults );
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Filter whether to do the default indexing.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool                     $index    Whether to use the default indexing.
+		 * @param CMB2_Field               $field    The CMB2_Field object.
+		 * @param array                    $defaults The array of defaults.
+		 * @param FacetWP_Integration_CMB2 $obj      The current class object.
+		 */
+		$default_index = apply_filters( 'facetwp_cmb2_default_index', true, $field, $defaults, $this );
+		if ( $default_index ) {
+			$this->index_field_values( $field, $defaults );
+		}
+
+		return true;
 	}
 
 	/**
