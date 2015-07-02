@@ -204,6 +204,27 @@ class FacetWP_Integration_CMB2 {
 	}
 
 	/**
+	 * Index a field based on the stored value(s).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param CMB2_Field $field    Field object.
+	 * @param array      $defaults Array of default values.
+	 */
+	public function index_field_values( $field, $defaults ) {
+		$index  = array();
+		$values = (array) $field->escaped_value();
+
+		foreach ( $values as $value ) {
+			$index[] = array(
+				'facet_value'         => $value,
+				'facet_display_value' => $field->args( 'name' ),
+			);
+		}
+		$this->index_multiple( $index, $defaults );
+	}
+
+	/**
 	 * Get registered CMB2 fields.
 	 *
 	 * @return array Multidimensional array of field data. Each array item contains 'id', 'label',
