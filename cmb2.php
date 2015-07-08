@@ -38,6 +38,12 @@ class FacetWP_Integration_CMB2 {
 	 * @since 1.0.0
 	 */
 	public function setup_hooks() {
+
+		// If we don't have CMB2, then there's nothing to do.
+		if ( ! defined( 'CMB2_LOADED' ) ) {
+			return;
+		}
+
 		// Add CMB2 fields to the Data Sources dropdown
 		add_filter( 'facetwp_facet_sources', array( $this, 'facet_sources' ) );
 
