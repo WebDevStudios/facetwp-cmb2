@@ -404,4 +404,5 @@ class FacetWP_Integration_CMB2 {
 	}
 }
 
-FacetWP_Integration_CMB2::instance()->setup_hooks();
+$instance = FacetWP_Integration_CMB2::instance();
+add_action( 'plugins_loaded', array( $instance, 'setup_hooks' ) );
