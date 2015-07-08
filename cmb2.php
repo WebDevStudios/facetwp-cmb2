@@ -115,7 +115,7 @@ class FacetWP_Integration_CMB2 {
 		$source = explode( '/', $facet['source'] );
 
 		// Maybe return early. Includes class check, just in case
-		if ( 'cmb2' !== $source[0] || ! class_exists( 'CMB2_boxes', false ) ) {
+		if ( 'cmb2' !== $source[0] || count( $source ) < 3 || ! class_exists( 'CMB2_boxes', false ) ) {
 			return $return;
 		}
 
