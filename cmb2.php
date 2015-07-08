@@ -61,6 +61,10 @@ class FacetWP_Integration_CMB2 {
 	 * @return array The updated set of data sources.
 	 */
 	public function facet_sources( $sources ) {
+		if ( ! defined( 'CMB2_LOADED' ) ) {
+			return $sources;
+		}
+
 		$sources['cmb2'] = array(
 			'label'   => 'CMB2',
 			'choices' => array(),
@@ -87,6 +91,10 @@ class FacetWP_Integration_CMB2 {
 	 * @return bool
 	 */
 	public function indexer_post_facet( $return, $params ) {
+		if ( ! defined( 'CMB2_LOADED' ) ) {
+			return $return;
+		}
+
 		$defaults = $params['defaults'];
 		$facet    = $params['facet'];
 
@@ -264,6 +272,10 @@ class FacetWP_Integration_CMB2 {
 	 * @return bool
 	 */
 	public function text_field_exceptions( $index, $field_type ) {
+		if ( ! defined( 'CMB2_LOADED' ) ) {
+			return $index;
+		}
+
 		$exception = array(
 			'text_date',
 			'text_time',
@@ -295,6 +307,10 @@ class FacetWP_Integration_CMB2 {
 	 * @return bool Whether to continue with the normal indexing.
 	 */
 	public function time_date_indexing( $filter, $field, $defaults ) {
+		if ( ! defined( 'CMB2_LOADED' ) ) {
+			return $filter;
+		}
+
 		$date_format = 'Y-m-d';
 		$extended_format = "{$date_format} H:i:s";
 		$index = array(
