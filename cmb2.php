@@ -122,8 +122,19 @@ class FacetWP_Integration_CMB2 {
 		// Initial var setup
 		$metabox_id = $source[1];
 		$field_id   = $source[2];
-		$cmb        = CMB2_Boxes::get( $metabox_id );
-		$field      = $cmb->get_field( $field_id );
+
+		// Make sure we can retrieve the Metabox
+		$cmb = CMB2_Boxes::get( $metabox_id );
+		if ( ! $cmb ) {
+			return $return;
+		}
+
+		// Make sure the field can be retrieved.
+		$field = $cmb->get_field( $field_id );
+		if ( ! $field ) {
+			return $return;
+		}
+
 		$field_type = $field->type();
 
 		/**
