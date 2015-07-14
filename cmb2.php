@@ -235,6 +235,9 @@ class FacetWP_Integration_CMB2 {
 		$values = (array) $field->escaped_value();
 
 		foreach ( $values as $value ) {
+			if ( empty( $value ) ) {
+				continue;
+			}
 			$index[] = array(
 				'facet_value'         => $value,
 				'facet_display_value' => $field->args( 'name' ),
