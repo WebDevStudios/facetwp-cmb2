@@ -184,7 +184,7 @@ class FacetWP_Integration_CMB2 {
 			if ( 'on' == $field->value() ) {
 				$this->index_field( $field, $defaults );
 			} else {
-				return false;
+				return true;
 			}
 		}
 
