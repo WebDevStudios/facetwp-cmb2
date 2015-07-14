@@ -175,7 +175,7 @@ class FacetWP_Integration_CMB2 {
 		 * @param bool $skip Whether to skip indexing WYSIWYG fields.
 		 */
 		$skip_index_wysiwyg = apply_filters( 'facetwp_cmb2_skip_index_wysiwyg', true );
-		if ( $skip_index_wysiwyg ) {
+		if ( 'wysiwyg' == $field_type && $skip_index_wysiwyg ) {
 			return false;
 		}
 
